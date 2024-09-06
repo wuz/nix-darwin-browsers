@@ -13,7 +13,7 @@
         let
           curl = "${pkgs.curl}/bin/curl";
           jq = "${pkgs.jq}/bin/jq";
-          update-firefox-version = pkgs.writeShellScriptBin "update-firefox-version" ''
+          latest-firefox-version = pkgs.writeShellScriptBin "latest-firefox-version" ''
             set -e
             version=$(${curl} 'https://product-details.mozilla.org/1.0/firefox_versions.json' | ${jq} -r '.LATEST_FIREFOX_VERSION')
             echo "Last version of Firefox is $version"
@@ -23,13 +23,13 @@
               --arg version "$version" \
               --arg sha256 "$sha256" \
               --arg url "$url" \
-              '{version: $version, url: $url, sha256: $sha256}' > firefox.json
+              '{version: $version, url: $url, sha256: $sha256}'
           '';
         in
         {
           default = pkgs.mkShell {
             buildInputs = [
-              update-firefox-version
+              latest-firefox-version
             ];
           };
         });
