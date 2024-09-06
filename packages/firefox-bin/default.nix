@@ -1,26 +1,26 @@
-self: super:
+{ stdenv, pkgs, fetchurl, lib, ... }:
 let
   firefox = builtins.fromJSON (builtins.readFile ./firefox.json);
 in
 {
-  firefox-bin = super.stdenv.mkDerivation rec {
+  firefox-bin = stdenv.mkDerivation rec {
     pname = "Firefox";
     version = firefox.version;
-    buildInputs = [ super.pkgs.undmg ];
+    buildInputs = [ pkgs.undmg ];
     sourceRoot = ".";
     phases = [ "unpackPhase" "installPhase" ];
     installPhase = ''
       mkdir -p "$out/Applications"
       cp -r Firefox.app "$out/Applications/Firefox.app"
     '';
-    src = super.fetchurl {
+    src = fetchurl {
       name = "Firefox-${version}.dmg";
       inherit (firefox) url sha256;
     };
-    meta = with super.stdenv.lib; {
+    meta = with stdenv.lib; {
       description = "The Firefox web browser";
       homepage = "https://www.mozilla.org/en-GB/firefox";
-      platforms = super.lib.platforms.darwin;
+      platforms = lib.platforms.darwin;
     };
   };
 }

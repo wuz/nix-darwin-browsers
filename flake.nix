@@ -7,7 +7,7 @@
       eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
     in
     {
-      overlay = import ./overlay.nix;
+      overlays.default = import ./overlays/firefox-bin.nix;
       formatter = eachSystem (pkgs: pkgs.nixpkgs-fmt);
       devShells = eachSystem (pkgs:
         let
