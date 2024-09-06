@@ -33,23 +33,20 @@ let
     super.stdenv.mkDerivation rec {
       inherit (sources."${edition}") version;
       pname = "Floorp";
-  
       buildInputs = [ super.pkgs._7zz ];
       sourceRoot = ".";
       phases = [ "unpackPhase" "installPhase" ];
-  
       unpackPhase = ''
         runHook preUnpack
         7zz x "$src" -o"$sourceRoot"
         runHook postUnpack
       '';
-
       installPhase = ''
         runHook preInstall
-    
+
         mkdir -p $out/Applications
         cp -r Floorp.app "$out/Applications/"
-    
+
         runHook postInstall
       '';
 
@@ -57,7 +54,7 @@ let
         name = "Floorp-${version}.dmg";
         inherit (sources."${edition}") url sha256;
       };
-  
+
       meta = {
         description = "Floorp is a new Firefox based browser from Japan with excellent privacy & flexibility.";
         homepage = "https://floorp.app/en";
@@ -91,7 +88,8 @@ let
         homepage = "http://www.mozilla.com/en-US/firefox/";
       };
     };
-in {
+in
+{
   firefox-bin = firefoxPackage "firefox";
   firefox-beta-bin = firefoxPackage "firefox-beta";
   firefox-devedition-bin = firefoxPackage "firefox-devedition";
