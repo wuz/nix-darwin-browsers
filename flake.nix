@@ -2,9 +2,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
   };
-  outputs = { systems, nixpkgs, ... }:
+  outputs = { nixpkgs, ... }:
     let
-      eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
+      systems = nixpkgs.lib.platforms.all;
+      eachSystem = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
     in
     {
       overlays.default = import ./overlays/firefox-bin.nix;
