@@ -16,6 +16,7 @@
         default = firefox-bin;
         firefox-bin = pkgs.callPackage ./packages/firefox-bin { };
       });
+      darwinModules.home-manager = import ./modules/home-manager.nix;
       devShells = eachSystem (pkgs:
         let
           curl = "${pkgs.curl}/bin/curl";
