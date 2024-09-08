@@ -19,6 +19,7 @@
       darwinModules.home-manager = import ./modules/home-manager.nix;
       devShells = eachSystem (pkgs:
         let
+          manifest = "./packages/firefox-bin/firefox.json";
           latest-firefox-version = pkgs.writeShellScriptBin "latest-firefox-version" ''
             set -e
             version=$(curl -s 'https://product-details.mozilla.org/1.0/firefox_versions.json' | jq -r '.LATEST_FIREFOX_VERSION')
@@ -33,13 +34,24 @@
               --arg url "$url" \
               '{version: $version, url: $url, sha256: $sha256}'
           '';
+          ci = pkgs.writeShellScriptBin "ci" ''
+            set -e
+            latest-firefox-version > ${manifest}
+            version=$(jq -r '.version' ${manifest})
+            git config --global user.name "github-actions"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
+            git diff --quiet || (git add ${manifest} && git commit -m "chore: bump Firefox to $version")
+            git push
+          '';
         in
         {
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
               jq
               curl
+              git
               latest-firefox-version
+              ci
             ];
           };
         });
