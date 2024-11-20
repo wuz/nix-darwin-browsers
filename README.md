@@ -1,47 +1,57 @@
-# nixpkgs-firefox-darwin
+# `firefox-nix-darwin`
 
-The Nixpkgs repository has long struggled with broken `firefox`, `librewolf`, and `floorp` packages on Darwin. Unfortunately, the `-bin` variants do not offer any support for Darwin. To address this issue, this overlay has been created, aiming to provide `-bin` packages for Firefox, Librewolf, and Floorp, generated directly from official builds.
+`firefox-nix-darwin` is simple home-manager module/overlay for Firefox browser with [policy][firefox-policies] support.
 
 ## How to use it
 
-Minimal configuration example using flakes, nix-darwin and home-manager:
+Minimal configuration example using flakes, nix-darwin and home-manager. For more information about [Firefox policies official support page from Mozilla][firefox-policies] and [home-manager options for Firefox][home-manager-firefox].
 
 ```nix
-# flake.nix
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     darwin.url = "github:lnl7/nix-darwin/master";
     home-manager.url = "github:nix-community/home-manager";
-    nixpkgs-firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
+    firefox-nix-darwin.url = "github:atahanyorganci/firefox-nix-darwin";
   };
-
-  outputs = { self, darwin, home-manager, nixpkgs, ... }@inputs: {
-    darwinConfigurations."machine" = let
-      # replace this with your username, obviously
-      username = "bandithedoge";
-    in darwin.lib.darwinSystem {
-      system = "x86_64-darwin";
-      modules = [
-        home-manager.darwinModules.home-manager
-        {
-          nixpkgs.overlays = [ inputs.nixpkgs-firefox-darwin.overlay ];
-          home-manager.users.${username} = {
-            programs.firefox = {
-              enable = true;
-
-              # IMPORTANT: use a package provided by the overlay (ends with `-bin`)
-              # see overlay.nix for all possible packages
-              package = pkgs.firefox-bin; # Or use pkgs.librewolf for Librewolf or pkgs.floorp-bin for Floorp
+  outputs = { self, darwin, home-manager, nixpkgs, firefox-darwin, ... }@inputs:
+    let
+      # replace this with your username and hostname obviously
+      hostname = "Atahan-Macbook-Pro";
+      username = "atahan";
+    in
+    {
+      darwinConfigurations.${hostname} = darwin.lib.darwinSystem {
+        system = "aarch64-darwin"; # or "x86_64-darwin" both are supported
+        modules = [
+          home-manager.darwinModules.home-manager
+          {
+            imports = [
+              # Importing `firefox-darwin` module will setup the nixpkgs Firefox package
+              firefox-darwin.darwinModules.home-manager
+            ];
+            home-manager.users.${username} = {
+              programs.firefox = {
+                # This will install the Firefox package from `firefox-nix-darwin` module
+                enable = true;
+                policies = {
+                  # This will enable the policies.json file for Firefox
+                  # These will disable auto updates for Firefox since it's managed by Nix
+                  AppAutoUpdate = false;
+                  DisableAppUpdate = true;
+                };
+              };
             };
-          };
-        }
-      ];
+          }
+        ];
+      };
     };
-  };
 }
 ```
 
 ## How it works
 
-The entire overlay is controlled by a script that fetches release information from Mozilla and puts the version, URL and SHA256 in a JSON file. The JSON gets imported by a Nix expression and the values are used to build a derivation. The script can be run manually or with a GitHub action.
+The entire overlay is controlled by `latest-firefox-version` script in the devShell that fetches release information from Mozilla and puts the version, URL and SHA256 in [`firefox.json`](./packages/firefox-bin/firefox.json). The JSON gets imported by a Nix expression and the values are used to build a derivation. A GitHub action runs `ci` script in the devShell to update `firefox.json` and commit it to the repository.
+
+[firefox-policies]: https://support.mozilla.org/en-US/kb/customizing-firefox-using-policiesjson
+[home-manager]: https://home-manager-options.extranix.com/?query=programs.firefox.policies
