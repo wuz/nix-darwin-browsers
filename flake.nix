@@ -14,7 +14,7 @@
       overlays.default = import ./overlays/floorp.nix;
       formatter = eachSystem (pkgs: pkgs.nixpkgs-fmt);
       packages = eachDarwinSystem (pkgs: rec {
-        default = floorp;
+        default = floorp-bin;
         floorp-bin = pkgs.callPackage ./packages/floorp-bin { };
       });
       darwinModules.home-manager = import ./modules/home-manager.nix;
