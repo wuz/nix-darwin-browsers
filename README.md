@@ -1,6 +1,6 @@
 # `floorp-nix-darwin`
 
-`floorp-nix-darwin` is simple home-manager module/overlay for Floorp browser with [policy][floorp-policies] support.
+`floorp-nix-darwin` is simple home-manager module/overlay for Floorp browser with policy support.
 
 ## How to use it
 
