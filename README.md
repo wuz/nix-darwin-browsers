@@ -1,10 +1,10 @@
-# `firefox-nix-darwin`
+# `floorp-nix-darwin`
 
-`firefox-nix-darwin` is simple home-manager module/overlay for Firefox browser with [policy][firefox-policies] support.
+`floorp-nix-darwin` is simple home-manager module/overlay for Floorp browser with [policy][floorp-policies] support.
 
 ## How to use it
 
-Minimal configuration example using flakes, nix-darwin and home-manager. For more information about [Firefox policies official support page from Mozilla][firefox-policies] and [home-manager options for Firefox][home-manager-firefox].
+Minimal configuration example using flakes, nix-darwin and home-manager. For more information about [Floorp policies official support page from Mozilla][floorp-policies] and [home-manager options for Floorp][home-manager-floorp].
 
 ```nix
 {
@@ -12,13 +12,13 @@ Minimal configuration example using flakes, nix-darwin and home-manager. For mor
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     darwin.url = "github:lnl7/nix-darwin/master";
     home-manager.url = "github:nix-community/home-manager";
-    firefox-nix-darwin.url = "github:atahanyorganci/firefox-nix-darwin";
+    floorp-nix-darwin.url = "github:wuz/floorp-nix-darwin";
   };
-  outputs = { self, darwin, home-manager, nixpkgs, firefox-darwin, ... }@inputs:
+  outputs = { self, darwin, home-manager, nixpkgs, floorp-darwin, ... }@inputs:
     let
       # replace this with your username and hostname obviously
-      hostname = "Atahan-Macbook-Pro";
-      username = "atahan";
+      hostname = "spellbook";
+      username = "wuz";
     in
     {
       darwinConfigurations.${hostname} = darwin.lib.darwinSystem {
@@ -27,16 +27,16 @@ Minimal configuration example using flakes, nix-darwin and home-manager. For mor
           home-manager.darwinModules.home-manager
           {
             imports = [
-              # Importing `firefox-darwin` module will setup the nixpkgs Firefox package
-              firefox-darwin.darwinModules.home-manager
+              # Importing `floorp-darwin` module will setup the nixpkgs floorp package
+              floorp-darwin.darwinModules.home-manager
             ];
             home-manager.users.${username} = {
-              programs.firefox = {
-                # This will install the Firefox package from `firefox-nix-darwin` module
+              programs.floorp = {
+                # This will install the floorp package from `floorp-nix-darwin` module
                 enable = true;
                 policies = {
-                  # This will enable the policies.json file for Firefox
-                  # These will disable auto updates for Firefox since it's managed by Nix
+                  # This will enable the policies.json file for floorp
+                  # These will disable auto updates for floorp since it's managed by Nix
                   AppAutoUpdate = false;
                   DisableAppUpdate = true;
                 };
@@ -51,7 +51,6 @@ Minimal configuration example using flakes, nix-darwin and home-manager. For mor
 
 ## How it works
 
-The entire overlay is controlled by `latest-firefox-version` script in the devShell that fetches release information from Mozilla and puts the version, URL and SHA256 in [`firefox.json`](./packages/firefox-bin/firefox.json). The JSON gets imported by a Nix expression and the values are used to build a derivation. A GitHub action runs `ci` script in the devShell to update `firefox.json` and commit it to the repository.
+The entire overlay is controlled by `latest-floorp-version` script in the devShell that fetches release information from Mozilla and puts the version, URL and SHA256 in [`floorp.json`](./packages/floorp-bin/floorp.json). The JSON gets imported by a Nix expression and the values are used to build a derivation. A GitHub action runs `ci` script in the devShell to update `floorp.json` and commit it to the repository.
 
-[firefox-policies]: https://support.mozilla.org/en-US/kb/customizing-firefox-using-policiesjson
-[home-manager]: https://home-manager-options.extranix.com/?query=programs.firefox.policies
+[home-manager]: https://home-manager-options.extranix.com/?query=programs.floorp.policies

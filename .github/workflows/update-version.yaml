@@ -1,5 +1,5 @@
 ---
-name: "Update Firefox version"
+name: "Update Floorp version"
 
 on:
   push:

@@ -1,13 +1,18 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
-  enabled = config.programs ? firefox && config.programs.firefox ? enable;
+  enabled = config.programs ? floorp && config.programs.floorp ? enable;
 in
 {
   config = lib.mkIf enabled {
-    programs.firefox = {
+    programs.floorp = {
       enable = true;
-      package = pkgs.callPackage ../packages/firefox-bin {
-        policies = config.programs.firefox.policies;
+      package = pkgs.callPackage ../packages/floorp-bin {
+        policies = config.programs.floorp.policies;
       };
     };
   };

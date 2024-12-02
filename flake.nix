@@ -2,7 +2,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
   };
-  outputs = { nixpkgs, ... }:
+  outputs =
+    { nixpkgs, ... }:
     let
       systems = nixpkgs.lib.platforms.all;
       eachSystem = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
@@ -10,22 +11,23 @@
       eachDarwinSystem = f: nixpkgs.lib.genAttrs darwin (system: f nixpkgs.legacyPackages.${system});
     in
     {
-      overlays.default = import ./overlays/firefox-bin.nix;
+      overlays.default = import ./overlays/floorp.nix;
       formatter = eachSystem (pkgs: pkgs.nixpkgs-fmt);
       packages = eachDarwinSystem (pkgs: rec {
-        default = firefox-bin;
-        firefox-bin = pkgs.callPackage ./packages/firefox-bin { };
+        default = floorp;
+        floorp = pkgs.callPackage ./packages/floorp { };
       });
       darwinModules.home-manager = import ./modules/home-manager.nix;
-      devShells = eachSystem (pkgs:
+      devShells = eachSystem (
+        pkgs:
         let
-          manifest = "./packages/firefox-bin/firefox.json";
-          latest-firefox-version = pkgs.writeShellScriptBin "latest-firefox-version" ''
+          manifest = "./packages/floorp/floorp.json";
+          latest-floorp-version = pkgs.writeShellScriptBin "latest-floorp-version" ''
             set -e
-            version=$(curl -s 'https://product-details.mozilla.org/1.0/firefox_versions.json' | jq -r '.LATEST_FIREFOX_VERSION')
-            echo "Last version of Firefox is $version" >&2
-            name="Firefox-$version.dmg"
-            url="https://download-installer.cdn.mozilla.net/pub/firefox/releases/$version/mac/en-GB/Firefox%20$version.dmg"
+            version=$(curl -s 'https://raw.githubusercontent.com/Floorp-Projects/Floorp-Updates/refs/heads/main/browser/latest.json' | jq -r '.mac.version')
+            echo "Last version of floorp is $version" >&2
+            name="floorp-$version.dmg"
+            url="https://github.com/Floorp-Projects/Floorp/releases/download/v$version/floorp-macOS-universal.dmg"
             sha256=$(nix-prefetch-url --name $version $url)
             echo "SHA256 of $name is $sha256" >&2
             jq -n -r \
@@ -36,11 +38,11 @@
           '';
           ci = pkgs.writeShellScriptBin "ci" ''
             set -e
-            latest-firefox-version > ${manifest}
+            latest-floorp-version > ${manifest}
             version=$(jq -r '.version' ${manifest})
             git config --global user.name "github-actions"
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
-            git diff --quiet || (git add ${manifest} && git commit -m "chore: bump Firefox to $version")
+            git diff --quiet || (git add ${manifest} && git commit -m "chore: bump floorp to $version")
             git push
           '';
         in
@@ -50,10 +52,11 @@
               jq
               curl
               git
-              latest-firefox-version
+              latest-floorp-version
               ci
             ];
           };
-        });
+        }
+      );
     };
 }
