@@ -21,7 +21,7 @@
       devShells = eachSystem (
         pkgs:
         let
-          manifest = "./packages/floorp/floorp.json";
+          manifest = "./packages/floorp-bin/floorp.json";
           latest-floorp-version = pkgs.writeShellScriptBin "latest-floorp-version" ''
             set -e
             version=$(curl -s 'https://raw.githubusercontent.com/Floorp-Projects/Floorp-Updates/refs/heads/main/browser/latest.json' | jq -r '.mac.version')
