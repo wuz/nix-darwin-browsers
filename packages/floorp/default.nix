@@ -14,12 +14,13 @@ in
 stdenv.mkDerivation rec {
   pname = "floorp";
   version = floorp.version;
-  buildInputs = [ pkgs.undmg ];
+  buildInputs = [ pkgs._7zz ];
   sourceRoot = ".";
   phases = [
     "unpackPhase"
     "installPhase"
   ];
+
   installPhase =
     ''
       mkdir -p "$out/Applications"
