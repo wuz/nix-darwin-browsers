@@ -15,7 +15,7 @@
       formatter = eachSystem (pkgs: pkgs.nixpkgs-fmt);
       packages = eachDarwinSystem (pkgs: rec {
         default = floorp;
-        floorp = pkgs.callPackage ./packages/floorp { };
+        floorp-bin = pkgs.callPackage ./packages/floorp-bin { };
       });
       darwinModules.home-manager = import ./modules/home-manager.nix;
       devShells = eachSystem (
