@@ -18,7 +18,6 @@
         floorp-bin = pkgs.callPackage ./packages/floorp-bin { };
         zen-browser-bin = pkgs.callPackage ./packages/zen-browser-bin { };
       });
-      darwinModules.home-manager = import ./modules/home-manager.nix;
       devShells = eachSystem (
         pkgs:
         let
