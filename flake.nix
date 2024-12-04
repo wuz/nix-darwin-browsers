@@ -11,7 +11,7 @@
       eachDarwinSystem = f: nixpkgs.lib.genAttrs darwin (system: f nixpkgs.legacyPackages.${system});
     in
     {
-      overlays.default = import ./overlays/floorp.nix;
+      overlays.default = import ./overlays/default.nix;
       formatter = eachSystem (pkgs: pkgs.nixpkgs-fmt);
       packages = eachDarwinSystem (pkgs: rec {
         default = floorp-bin;
