@@ -1,3 +1,5 @@
 result
-result/
+out
 .DS_Store
+
+.direnv

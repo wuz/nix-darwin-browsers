@@ -1,6 +1,6 @@
-# `floorp-nix-darwin`
+# `nix-darwin-browsers`
 
-`floorp-nix-darwin` is simple home-manager module/overlay for Floorp browser with policy support.
+`nix-darwin-browsers` is simple home-manager module/overlay for various third-party browsers on nix-darwin.
 
 ## How to use it
 
@@ -12,9 +12,9 @@ Minimal configuration example using flakes, nix-darwin and home-manager. For mor
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     darwin.url = "github:lnl7/nix-darwin/master";
     home-manager.url = "github:nix-community/home-manager";
-    floorp-nix-darwin.url = "github:wuz/floorp-nix-darwin";
+    nix-darwin-browsers.url = "github:wuz/nix-darwin-browsers";
   };
-  outputs = { self, darwin, home-manager, nixpkgs, floorp-darwin, ... }@inputs:
+  outputs = { self, darwin, home-manager, nixpkgs, ... }@inputs:
     let
       # replace this with your username and hostname obviously
       hostname = "spellbook";
@@ -26,14 +26,13 @@ Minimal configuration example using flakes, nix-darwin and home-manager. For mor
         modules = [
           home-manager.darwinModules.home-manager
           {
-            imports = [
-              # Importing `floorp-darwin` module will setup the nixpkgs floorp package
-              floorp-darwin.darwinModules.home-manager
-            ];
+            # Use the overlay provided by this package
+            nixpkgs.overlays = [ inputs.nix-darwin-browsers.overlay ];
             home-manager.users.${username} = {
-              programs.floorp = {
-                # This will install the floorp package from `floorp-nix-darwin` module
+              programs.firefox = {
                 enable = true;
+                # Package provided by overlay (or use zen-browser-bin)
+                package = pkgs.floorp-bin;
                 policies = {
                   # This will enable the policies.json file for floorp
                   # These will disable auto updates for floorp since it's managed by Nix
