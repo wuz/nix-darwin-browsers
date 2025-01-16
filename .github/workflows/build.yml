@@ -1,11 +1,11 @@
 ---
-name: "Build Floorp on macOS"
+name: "Build Zen Browser on macOS"
 on:
   push:
     branches:
       - "**"
   workflow_run:
-    workflows: ["Update Floorp version"]
+    workflows: ["Update Zen Browser version"]
     types:
       - completed
   pull_request:

@@ -4,7 +4,7 @@
 
 ## How to use it
 
-Minimal configuration example using flakes, nix-darwin and home-manager. For more information about [Floorp policies official support page from Mozilla][floorp-policies] and [home-manager options for Floorp][home-manager-floorp].
+Minimal configuration example using flakes, nix-darwin and home-manager. For more information about [zen-browser policies official support page from Mozilla][zen-browser-policies] and [home-manager options for zen-browser][home-manager-zen-browser].
 
 ```nix
 {
@@ -32,10 +32,10 @@ Minimal configuration example using flakes, nix-darwin and home-manager. For mor
               programs.firefox = {
                 enable = true;
                 # Package provided by overlay (or use zen-browser-bin)
-                package = pkgs.floorp-bin;
+                package = pkgs.zen-browser-bin;
                 policies = {
-                  # This will enable the policies.json file for floorp
-                  # These will disable auto updates for floorp since it's managed by Nix
+                  # This will enable the policies.json file for zen-browser
+                  # These will disable auto updates for zen-browser since it's managed by Nix
                   AppAutoUpdate = false;
                   DisableAppUpdate = true;
                 };
@@ -50,6 +50,5 @@ Minimal configuration example using flakes, nix-darwin and home-manager. For mor
 
 ## How it works
 
-The entire overlay is controlled by `latest-floorp-version` script in the devShell that fetches release information from Mozilla and puts the version, URL and SHA256 in [`floorp.json`](./packages/floorp-bin/floorp.json). The JSON gets imported by a Nix expression and the values are used to build a derivation. A GitHub action runs `ci` script in the devShell to update `floorp.json` and commit it to the repository.
+The entire overlay is controlled by `latest-zen-version` script in the devShell that fetches release information from Mozilla and puts the version, URL and SHA256 in [`zen-browser.json`](./packages/zen-browser-bin/zen-browser.json). The JSON gets imported by a Nix expression and the values are used to build a derivation. A GitHub action runs `ci` script in the devShell to update `zen-browser.json` and commit it to the repository.
 
-[home-manager]: https://home-manager-options.extranix.com/?query=programs.floorp.policies
