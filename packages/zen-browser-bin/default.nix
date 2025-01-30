@@ -3,7 +3,10 @@
   pkgs,
   fetchurl,
   lib,
-  policies ? { },
+  policies ? {
+    AppAutoUpdate = false;
+    DisableAppUpdate = true;
+  },
   ...
 }:
 let
@@ -37,7 +40,7 @@ stdenv.mkDerivation rec {
       runHook preInstall
 
        mkdir -p "$out/Applications/${sourceRoot}"
-      cp -R . "$out/Applications/${sourceRoot}"
+       cp -R . "$out/Applications/${sourceRoot}"
 
         if [[ -e "$out/Applications/${sourceRoot}/Contents/MacOS/Zen\ Browser.app" ]]; then
           makeWrapper "$out/Applications/${sourceRoot}/Contents/MacOS/Zen\ Browser.app" $out/bin/Zen\ Browser.app
