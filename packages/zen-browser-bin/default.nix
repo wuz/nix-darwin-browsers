@@ -42,18 +42,18 @@ stdenv.mkDerivation rec {
        mkdir -p "$out/Applications/${sourceRoot}"
        cp -R . "$out/Applications/${sourceRoot}"
 
-        if [[ -e "$out/Applications/${sourceRoot}/Contents/MacOS/Zen\ Browser.app" ]]; then
-          makeWrapper "$out/Applications/${sourceRoot}/Contents/MacOS/Zen\ Browser.app" $out/bin/Zen\ Browser.app
+        if [[ -e "$out/Applications/${sourceRoot}/Contents/MacOS/Zen.app" ]]; then
+          makeWrapper "$out/Applications/${sourceRoot}/Contents/MacOS/Zen.app" $out/bin/Zen.app
         elif [[ -e "$out/Applications/${sourceRoot}/Contents/MacOS/${lib.removeSuffix ".app" sourceRoot}" ]]; then
-          makeWrapper "$out/Applications/${sourceRoot}/Contents/MacOS/${lib.removeSuffix ".app" sourceRoot}" $out/bin/Zen\ Browser.app
+          makeWrapper "$out/Applications/${sourceRoot}/Contents/MacOS/${lib.removeSuffix ".app" sourceRoot}" $out/bin/Zen.app
         fi
         runHook postInstall
     ''
     + (
       if isPoliciesEnabled then
         ''
-          mkdir -p "$out/Applications/Zen Browser.app/Contents/Resources/distribution"
-          echo '${policiesJson}' > "$out/Applications/Zen Browser.app/Contents/Resources/distribution/policies.json"
+          mkdir -p "$out/Applications/Zen.app/Contents/Resources/distribution"
+          echo '${policiesJson}' > "$out/Applications/Zen.app/Contents/Resources/distribution/policies.json"
 
           runHook postInstall
         ''
