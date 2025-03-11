@@ -26,7 +26,7 @@
             version=$(curl -s 'https://api.github.com/repos/zen-browser/desktop/releases/latest' | jq -r '.tag_name')
             echo "Last version of zen-browser is $version" >&2
             name="Zen-$version.dmg"
-            url="https://github.com/zen-browser/desktop/releases/download/$version/zen.macos-aarch64.dmg"
+            url="https://github.com/zen-browser/desktop/releases/download/$version/zen.macos-universal.dmg"
             sha256=$(nix-prefetch-url --name $version $url)
             echo "SHA256 of $name is $sha256" >&2
             jq -n -r \
